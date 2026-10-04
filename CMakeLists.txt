@@ -20,6 +20,7 @@ set(BADCOMPANYRECOMP_SOURCES
 
 if(WIN32)
     add_executable(badcompanyrecomp WIN32 ${BADCOMPANYRECOMP_SOURCES})
+    target_link_libraries(badcompanyrecomp PRIVATE dbghelp)
 else()
     add_executable(badcompanyrecomp ${BADCOMPANYRECOMP_SOURCES})
 endif()

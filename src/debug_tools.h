@@ -1,5 +1,8 @@
-// debug_tools.h - Diagnostic and debugging tools for Battlefield: Bad Company
 #pragma once
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include <cstdio>
 #include <cstdlib>

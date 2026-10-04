@@ -53,9 +53,12 @@ vulkan_allow_present_mode_fifo_relaxed = false
 vulkan_allow_present_mode_mailbox = false
 
 headless = false
-log_level = "warn"
+log_level = "debug"
 gpu_allow_invalid_fetch_constants = true
-dev_debug_runtime = true
+dev_debug_runtime = false
 
 # Gameplay / Retro physics: authentic 30 FPS
 badco_fps_60 = false
+
+# Filesystem: Frostbite dvd-probe check requires write access to GAME:
+allow_game_relative_writes = true
