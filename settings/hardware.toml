@@ -1,0 +1,61 @@
+# badcompanyrecomp - hardware / rendering settings
+# Battlefield: Bad Company (Title ID: 454107F9, Frostbite 1.0)
+
+gpu_plugin = "xenos"
+graphics_backend = "any"
+vsync = false
+
+# Internal render scale (1 = native 720p)
+resolution_scale = 1
+async_shader_compilation = true
+native_2x_msaa = false
+anisotropic_override = 1
+
+texture_cache_memory_limit_soft = 1024
+texture_cache_memory_limit_hard = 4096
+clear_memory_page_state = true
+readback_memexport = true
+readback_memexport_fast = true
+readback_resolve = "fast"
+host_present_from_non_ui_thread = true
+
+window_width = 1920
+window_height = 1080
+fullscreen = false
+monitor = 0
+resolution = "1920x1080"
+
+# ROV for Frostbite eDRAM blending / HDR
+render_target_path_d3d12 = "rov"
+d3d12_readback_resolve = true
+gamma_render_target_as_unorm16 = true
+
+store_shaders = true
+present_letterbox = true
+
+d3d12_adapter = -1
+d3d12_allow_variable_refresh_rate_and_tearing = true
+d3d12_bindless = true
+d3d12_break_on_error = false
+d3d12_break_on_warning = false
+d3d12_debug = false
+d3d12_dxbc_disasm = false
+d3d12_dxbc_disasm_dxilconv = false
+d3d12_pipeline_creation_threads = -1
+d3d12_queue_priority = 2
+d3d12_submit_on_primary_buffer_end = true
+d3d12_tessellation_wireframe = false
+
+render_target_path_vulkan = "fbo"
+vulkan_log_debug_messages = false
+vulkan_allow_present_mode_immediate = true
+vulkan_allow_present_mode_fifo_relaxed = false
+vulkan_allow_present_mode_mailbox = false
+
+headless = false
+log_level = "warn"
+gpu_allow_invalid_fetch_constants = true
+dev_debug_runtime = true
+
+# Gameplay / Retro physics: authentic 30 FPS
+badco_fps_60 = false

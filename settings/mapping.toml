@@ -1,0 +1,79 @@
+# ArmyOfTwoRecomp - input mapping settings
+#
+# Loaded automatically at startup in addition to hardware.toml (see
+# OnConfigurePaths in src/armyoftworecomp_app.h.h). --flag on the command line and
+# REX_* environment variables always override values from this file.
+#
+# Gamepad button layouts (DualShock 4 / DualSense / Xbox / Switch Pro, etc.)
+# are auto-mapped to the Xbox 360 layout by SDL - there is nothing to
+# configure for that here. These three cvars only select/tune the backend.
+#
+# Flat key = value only
+
+# "" is rejected by this cvar's validator (logs a warning, falls back to
+# compiled default) - must be an explicit value: "sdl", "xinput", or "nop"
+# (input disabled). "sdl" is what's actually in use, confirmed via the
+# startup log line "SDL input driver initialized successfully".
+input_backend = "sdl"
+
+# Path to a custom HID remap file used to fill in gamepads SDL doesn't
+# already recognize, or "" to skip it. "gamecontrollerdb.txt" matches the
+# file CMakeLists.txt stages next to the exe from settings/gamecontrollerdb.txt
+# (sourced from https://github.com/mdqinc/SDL_GameControllerDB).
+hid_mappings_file = "gamecontrollerdb.txt"
+
+# Route the controller Guide/PS button to the guest.
+guide_button = true
+
+# Keyboard+mouse run in parallel with a physical gamepad, not instead of it -
+# the SDK always merges every assigned device's input for guest user 0
+# (see rex::input::MergeInto). mnk_mode turns on keyboard-as-controller;
+# mnk_mouse additionally routes mouse movement to the right stick.
+mnk_mode = true
+mnk_mouse = true
+mnk_sensitivity = 1.0
+
+# ─────────────────────────────────────────────────────────────
+# Keyboard bindings (default values)
+# ─────────────────────────────────────────────────────────────
+# Format: comma-separated list of keys, optional modifiers (Shift+, Ctrl+, Alt+)
+
+# Controller buttons
+keybind_a = "Semicolon,Space"          # A button
+keybind_b = "Quote,Backspace"          # B button
+keybind_x = "L"                        # X button
+keybind_y = "P"                        # Y button
+
+# Triggers (analog)
+keybind_left_trigger = "Q,I"           # Left trigger
+keybind_right_trigger = "E,O"          # Right trigger
+
+# Shoulder buttons
+keybind_left_shoulder = "1"            # Left shoulder (LB)
+keybind_right_shoulder = "3"           # Right shoulder (RB)
+
+# Left stick (analog)
+keybind_lstick_up = "W"                # Left stick up
+keybind_lstick_down = "S"              # Left stick down
+keybind_lstick_left = "A"              # Left stick left
+keybind_lstick_right = "D"             # Left stick right
+keybind_lstick_press = "F"             # Left stick press (L3)
+
+# Right stick (analog)
+keybind_rstick_up = "Up"               # Right stick up
+keybind_rstick_down = "Down"           # Right stick down
+keybind_rstick_left = "Left"           # Right stick left
+keybind_rstick_right = "Right"         # Right stick right
+keybind_rstick_press = "K"             # Right stick press (R3)
+
+# D-pad
+keybind_dpad_up = "Shift+Up"           # D-pad up
+keybind_dpad_down = "Shift+Down"       # D-pad down
+keybind_dpad_left = "Shift+Left"       # D-pad left
+keybind_dpad_right = "Shift+Right"     # D-pad right
+
+# Special buttons
+keybind_back = "Z,Tab"                 # Back button
+keybind_start = "X,Return"             # Start button
+keybind_guide = ""                     # Guide button (empty = disabled)
+

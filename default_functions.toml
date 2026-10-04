@@ -1,0 +1,6 @@
+# default_functions.toml - Battlefield: Bad Company Recompilation
+# Discovered function overrides, indirect call targets, and stub replacements
+[functions]
+0x826F3AC8 = {} # unresolved call from 0x82325EB8
+0x82573640 = {} # unresolved call from 0x82573D44
+0x82936828 = {} # unresolved call from 0x8293F1F4

@@ -1,0 +1,31 @@
+# Build and IDE artifacts
+build/
+out/
+bin/
+obj/
+.vs/
+*.user
+*.suo
+CMakeUserPresets.json
+
+# Generated C++ sources
+generated/
+
+# Game assets from Xbox 360 disc/ISO (never commit retail data)
+assets/*
+!assets/README.md
+
+# ReXGlue SDK
+rexglue/win-amd64/
+rexglue/linux-amd64/
+rexglue/mac-amd64/
+rexglue/mac-arm64/
+rexglue/*.zip
+
+# Logs and runtime dumps
+logs/
+*.log
+
+# Disc archives and backups
+*.7z
+*.iso
