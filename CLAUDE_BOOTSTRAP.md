@@ -37,9 +37,13 @@
   - Created placeholder `assets/dvd-prb`.
   - In log #10: `NtSetInformationFile set deleting flag for dvd-prb on close to: true` (PROBE SUCCEEDED).
 
----
+## 3. Resolved Blocker: HDD Cache Partition Calibration & CRT Abort (Title Screen Reached!)
 
-## 3. Current Blocker: HDD Cache Partition Calibration
+- **Solution**:
+  - `sub_8292BDA0`: Returns `STATUS_SUCCESS` (0) to emulate No-HDD SKU mode.
+  - `sub_82591430`: Safely skips null dispatchers preventing CRT `abort(1)`.
+  - Discovered and registered indirect functions in `default_functions.toml`: `0x82445ED8`, `0x82442A70`, `0x82445E10`, `0x82458E40`, `0x828D4AC0`, `0x829317D8`, `0x82937170`, `0x82378D40`, `0x827B4800`, `0x827B4BB0`, `0x827B4BE8`.
+  - **Result**: Game reaches Title Screen ("Press START to begin") with full D3D12 ROV graphics and real-time audio!
 
 ### Crash Call Stack (`logs/crash_stack.txt`):
 ```text
