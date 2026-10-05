@@ -15,7 +15,7 @@ This file is written for AI coding agents (**Claude Code**, **Antigravity**, **G
 
 | Rule ID | Rule Statement | Reason / Consequence |
 | :--- | :--- | :--- |
-| **RULE_NO_CLI_BUILDS** | **DO NOT run `cmake --build`, `ninja`, `msbuild`, `cl`, `clang-cl` in CLI.** | The terminal will hang or corrupt CMake toolset environment. **User builds exclusively via Visual Studio 2022 (`F7` build, `Ctrl + F5` run).** |
+| **RULE_CLI_BUILD_TOOL** | **For CLI builds, use `tools/build.ps1` only.** | Never run raw cmake or cl without proper VS DevShell environment. `tools/build.ps1` loads Visual Studio 18 DevShell and LLVM path exactly like F7 in IDE. |
 | **RULE_READONLY_GENERATED** | **`generated/` is strictly READ-ONLY.** | The build automatically re-runs `rexglue codegen` whenever manifests, config TOMLs, or the XEX change. It completely wipes `generated/`. All patches and overrides MUST be placed in `src/game_fixes.h` or config TOMLs. |
 | **RULE_LANG_RUSSIAN** | **All user communication and markdown reports MUST be in Russian.** | Mandatory user requirement. Code comments and commits in English. |
 | **RULE_RETRO_STANDARDS** | **Preserve 30 FPS lock (`badco_fps_60 = false`), 720p/1080p, D3D12 ROV, fast readback.** | Frostbite 1.0 physics and vehicle simulation degrade at variable/unlocked frame rates; lighting relies on ROV and fast readback. |
@@ -63,6 +63,10 @@ C:\Recompiles\Bad Company\
 │   ├── game_patches.h              <-- Engine memory byte patches
 │   ├── debug_tools.h               <-- Stub sweep and missing function scanner
 │   └── utils.h                     <-- Path and configuration helpers
+├── tools\
+│   ├── build.ps1                   <-- F7 equivalent: Visual Studio DevShell Clang build
+│   ├── launch.ps1                  <-- F5 equivalent: Kill previous & launch with args
+│   └── test_run.ps1                <-- Automated run, log watcher, crash catcher
 ├── assets\                         <-- Game disc files (default.xex, dist/, Output/, etc.)
 ├── generated\                      <-- [READ-ONLY] 367 generated C++ units (54,126 functions)
 └── out\build\local-win-relwithdebinfo\logs\ <-- Runtime logs (badcompanyrecomp_NNN.log, crash.dmp)
@@ -70,7 +74,26 @@ C:\Recompiles\Bad Company\
 
 ---
 
-## 4. Current Milestone Status (Proof of Concept)
+## 4. Automation Scripts (Claude/Antigravity Pipeline)
+
+All AI agents can autonomously trigger compilation, launching, and crash analysis:
+
+- **Build (F7)**:
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File tools/build.ps1
+  ```
+- **Launch (F5)**:
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File tools/launch.ps1
+  ```
+- **Test Run & Crash Monitor**:
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File tools/test_run.ps1 -TimeoutSeconds 25
+  ```
+
+---
+
+## 5. Current Milestone Status (Proof of Concept)
 
 - **Memory Subsystem**: `0xC0000005` Access Violations resolved via On-Demand Page Fault Handler and chunked precommit.
 - **VFS / DVD Probe**: `GAME:\dvd-prb` write check passed (`allow_game_relative_writes = true`).

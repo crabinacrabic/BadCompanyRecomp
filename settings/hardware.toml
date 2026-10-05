@@ -55,7 +55,7 @@ vulkan_allow_present_mode_mailbox = false
 headless = false
 log_level = "debug"
 gpu_allow_invalid_fetch_constants = true
-dev_debug_runtime = false
+dev_debug_runtime = true
 
 # Gameplay / Retro physics: authentic 30 FPS
 badco_fps_60 = false

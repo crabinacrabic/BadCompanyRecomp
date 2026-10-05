@@ -151,13 +151,9 @@ public:
     {
       return;
     }
-    // Safely precommit memory alias ranges in 64KB chunks avoiding conflicts with loaded image sections
-    SafeCommitRange(base + 0x00000000ull, 0x40000000ull);
-    SafeCommitRange(base + 0x40000000ull, 0x40000000ull);
-    SafeCommitRange(base + 0x80000000ull, 0x20000000ull);
-    SafeCommitRange(base + 0xA0000000ull, 0x20000000ull);
-    SafeCommitRange(base + 0xC0000000ull, 0x20000000ull);
-    SafeCommitRange(base + 0xE0000000ull, 0x1FD00000ull);
+    // Fast direct commit for physical memory range (512MB)
+    // On-demand page fault handler will automatically commit any remaining alias pages on access.
+    VirtualAlloc(base + 0x00000000ull, 0x20000000ull, MEM_COMMIT, PAGE_READWRITE);
 #endif
   }
 
@@ -214,14 +210,18 @@ public:
 
   void OnPostSetup() override
   {
-    PrecommitMemoryAliases();
-    UnlockImageMemoryProtection();
     utils::LoadSettingsFiles();
 
     auto *rt = rex::Runtime::instance();
     auto *fd = rt ? rt->function_dispatcher() : nullptr;
     if (fd)
     {
+      // Intercept NULL indirect function pointer calls
+      fd->SetFunction(0x00000000, [](PPCContext &ctx, uint8_t *base) {
+        REXLOG_WARN("[fix] Ignored call to NULL guest function pointer (Caller LR=0x{:08X})", (uint32_t)ctx.lr);
+        ctx.r3.s64 = 0;
+      });
+
       // Intercept KeBugCheck to diagnose guest kernel panics
       fd->SetFunction(0x82B2FD90, [](PPCContext &ctx, uint8_t *base) {
         REXLOG_ERROR("=== GUEST KERNEL PANIC: KeBugCheck ===");

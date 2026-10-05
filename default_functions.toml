@@ -4,3 +4,14 @@
 0x826F3AC8 = {} # unresolved call from 0x82325EB8
 0x82573640 = {} # unresolved call from 0x82573D44
 0x82936828 = {} # unresolved call from 0x8293F1F4
+0x82445ED8 = {} # indirect call during XenonGameSettings.cfg loading
+0x82442A70 = {} # indirect call from 0x82445ED8 / settings loader
+0x82445E10 = {} # indirect call during XenonGameSettings.cfg loading
+0x82458E40 = {} # stub sweep: LR=0x8249678C
+0x828D4AC0 = {} # stub sweep: LR=0x828DDA48
+0x829317D8 = {} # stub sweep: LR=0x8293B14C (RWAudioCore)
+0x82937170 = {} # stub sweep: LR=0x8293A744 (RWAudioCore)
+0x82378D40 = {} # stub sweep: LR=0x823DFEF8
+0x827B4800 = {} # stub sweep: LR=0x827B97E0
+0x827B4BB0 = {} # stub sweep: LR=0x827B97E0
+0x827B4BE8 = {} # stub sweep: LR=0x827B97E0

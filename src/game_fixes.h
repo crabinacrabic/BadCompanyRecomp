@@ -81,3 +81,39 @@ REX_HOOK_RAW(sub_8292BDA0)
   REXLOG_INFO("[fix] sub_8292BDA0 called (HDD Cache container open/dismount); returning SUCCESS to emulate No-HDD SKU");
   ctx.r3.s64 = 0; // STATUS_SUCCESS (0)
 }
+
+// ---------------------------------------------------------------------------
+// 4. sub_82591430: Frostbite State / Worker Dispatcher
+// ---------------------------------------------------------------------------
+REX_HOOK_RAW(sub_82591430)
+{
+  uint32_t obj = ctx.r3.u32;
+  uint32_t param = ctx.r4.u32;
+  uint32_t r10 = 0;
+  uint32_t func_ptr = 0;
+
+  if (obj != 0)
+  {
+    r10 = REX_LOAD_U32(obj + 16);
+    if (r10 != 0)
+    {
+      func_ptr = REX_LOAD_U32(r10 + 88);
+    }
+  }
+
+  REXLOG_INFO("[fix] sub_82591430 entry: obj=0x{:08X}, param={}, r10=0x{:08X}, func_ptr(r10+88)=0x{:08X}",
+              obj, param, r10, func_ptr);
+  rex::FlushLogging();
+
+  if (func_ptr == 0)
+  {
+    REXLOG_WARN("[fix] sub_82591430: func_ptr is NULL! Returning gracefully instead of aborting.");
+    return;
+  }
+
+  __imp__sub_82591430(ctx, base);
+
+  REXLOG_INFO("[fix] sub_82591430 exit (completed without crash)");
+  rex::FlushLogging();
+}
+
