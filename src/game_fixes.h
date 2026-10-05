@@ -117,3 +117,42 @@ REX_HOOK_RAW(sub_82591430)
   rex::FlushLogging();
 }
 
+// ---------------------------------------------------------------------------
+// 5. sub_8291F508: XamShowDeviceSelectorUI wrapper & Storage Selection
+// ---------------------------------------------------------------------------
+// Frostbite calls this to display the device selector UI when starting a campaign.
+// With an overlapped pointer (ctx.r8 != 0), the engine strictly expects
+// ERROR_IO_PENDING (997) as the return value to enter its completion wait loop.
+// ReXGlue headless UI returns 0 (ERROR_SUCCESS), which causes Frostbite to enter
+// an infinite retry loop at loc_82ABC430, freezing on "PLEASE WAIT - STARTING GAME".
+// We also ensure *pDeviceId (ctx.r7) is set to 1 (valid storage device).
+// ---------------------------------------------------------------------------
+REX_HOOK_RAW(sub_8291F508)
+{
+  uint32_t device_id_ptr = ctx.r7.u32;
+  uint32_t overlapped_ptr = ctx.r8.u32;
+
+  REXLOG_INFO("[fix] sub_8291F508 (XamShowDeviceSelectorUI wrapper) called: user={}, type={}, flags={}, size={}, pDeviceId=0x{:08X}, pOverlapped=0x{:08X}",
+              ctx.r3.u32, ctx.r4.u32, ctx.r5.u32, ctx.r6.u32, device_id_ptr, overlapped_ptr);
+  rex::FlushLogging();
+
+  __imp__sub_8291F508(ctx, base);
+
+  if (device_id_ptr != 0)
+  {
+    uint32_t current_id = REX_LOAD_U32(device_id_ptr);
+    if (current_id == 0)
+    {
+      REX_STORE_U32(device_id_ptr, 1); // 1 = Valid default HDD / MU device ID
+      REXLOG_INFO("[fix] sub_8291F508: Set *pDeviceId = 1 (default storage)");
+    }
+  }
+
+  if (overlapped_ptr != 0 && ctx.r3.u32 == 0)
+  {
+    ctx.r3.s64 = 997; // ERROR_IO_PENDING
+    REXLOG_INFO("[fix] sub_8291F508: Overrode return value to ERROR_IO_PENDING (997) for Frostbite async loop");
+  }
+  rex::FlushLogging();
+}
+

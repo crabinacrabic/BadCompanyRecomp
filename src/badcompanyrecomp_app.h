@@ -12,6 +12,9 @@
 #include <cstring>
 #include <memory>
 #include <string>
+#include <atomic>
+#include <chrono>
+#include <thread>
 
 #if defined(_WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
@@ -151,9 +154,13 @@ public:
     {
       return;
     }
-    // Fast direct commit for physical memory range (512MB)
-    // On-demand page fault handler will automatically commit any remaining alias pages on access.
-    VirtualAlloc(base + 0x00000000ull, 0x20000000ull, MEM_COMMIT, PAGE_READWRITE);
+    // Commit physical, cached and uncached write-combined Xbox 360 memory ranges (512MB each alias)
+    VirtualAlloc(base + 0x00000000ull, 0x40000000ull, MEM_COMMIT, PAGE_READWRITE);
+    VirtualAlloc(base + 0x40000000ull, 0x40000000ull, MEM_COMMIT, PAGE_READWRITE);
+    VirtualAlloc(base + 0x80000000ull, 0x20000000ull, MEM_COMMIT, PAGE_READWRITE);
+    VirtualAlloc(base + 0xA0000000ull, 0x20000000ull, MEM_COMMIT, PAGE_READWRITE);
+    VirtualAlloc(base + 0xC0000000ull, 0x20000000ull, MEM_COMMIT, PAGE_READWRITE);
+    VirtualAlloc(base + 0xE0000000ull, 0x1FD00000ull, MEM_COMMIT, PAGE_READWRITE);
 #endif
   }
 
@@ -180,7 +187,7 @@ public:
       return;
     }
     uint8_t *curr = base + 0x82000000ull;
-    uint8_t *end = base + 0x83000000ull;
+    uint8_t *end = base + 0x84000000ull;
     while (curr < end)
     {
       MEMORY_BASIC_INFORMATION mbi{};
@@ -210,7 +217,22 @@ public:
 
   void OnPostSetup() override
   {
+    PrecommitMemoryAliases();
+    UnlockImageMemoryProtection();
     utils::LoadSettingsFiles();
+
+    // Start real-time background log flusher (every 500ms) to ensure logs are never lost
+    static std::atomic<bool> s_flush_running{false};
+    if (!s_flush_running.exchange(true))
+    {
+      std::thread([]() {
+        while (true)
+        {
+          std::this_thread::sleep_for(std::chrono::milliseconds(500));
+          rex::FlushLogging();
+        }
+      }).detach();
+    }
 
     auto *rt = rex::Runtime::instance();
     auto *fd = rt ? rt->function_dispatcher() : nullptr;
