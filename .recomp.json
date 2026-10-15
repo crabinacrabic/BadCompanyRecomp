@@ -1,0 +1,30 @@
+{
+  "$schema": "https://recomp.fyi/schema/v1.json",
+  "game": "Battlefield: Bad Company",
+  "wikidata": "Q648128",
+  "system": "Xbox 360",
+  "type": "recomp",
+  "original": {
+    "serial": "454107F9"
+  },
+  "project": "Battlefield: Bad Company PC Recompilation",
+  "status": "in-progress",
+  "targets": [
+    "Windows"
+  ],
+  "toolchain": "Rexglue",
+  "approach": "Static recompilation using ReXGlue SDK v0.10 (Frostbite 1.0)",
+  "maintainers": [
+    {
+      "name": "crabinacrabic",
+      "link": "https://github.com/crabinacrabic"
+    }
+  ],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/crabinacrabic/BadCompanyRecomp"
+    }
+  ],
+  "notes": "Battlefield: Bad Company (Xbox 360, 2008, 454107F9) static recompilation using ReXGlue SDK v0.10. Frostbite 1.0 engine."
+}
